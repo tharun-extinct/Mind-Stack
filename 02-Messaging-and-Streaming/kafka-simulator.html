@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafka Interactive Simulator</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h2 { margin-top: 0; color: #2c3e50; font-size: 1.2rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .btn { background: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn:hover { background: #2980b9; }
+        .btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+        
+        /* Kafka Topic Log */
+        .log-container { display: flex; gap: 10px; overflow-x: auto; padding: 15px 0; min-height: 80px; align-items: center;}
+        .message-block { min-width: 120px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 6px; padding: 10px; text-align: center; position: relative; }
+        .offset-badge { position: absolute; top: -10px; left: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 24px; height: 24px; font-size: 12px; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+        
+        /* Consumers */
+        .consumers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .consumer-status { margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #2ecc71; font-family: monospace;}
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function KafkaSimulator() {
+            // State
+            const [topic, setTopic] = React.useState([]);
+            const [orderCounter, setOrderCounter] = React.useState(101);
+            
+            // Consumer Offsets
+            const [inventoryOffset, setInventoryOffset] = React.useState(0);
+            const [shippingOffset, setShippingOffset] = React.useState(0);
+
+            // Produce a new message
+            const produceMessage = () => {
+                const newMessage = { id: orderCounter, item: 'Fresh Organic Produce' };
+                setTopic([...topic, newMessage]);
+                setOrderCounter(orderCounter + 1);
+            };
+
+            // Consume messages
+            const consumeInventory = () => {
+                if (inventoryOffset < topic.length) setInventoryOffset(inventoryOffset + 1);
+            };
+
+            const consumeShipping = () => {
+                if (shippingOffset < topic.length) setShippingOffset(shippingOffset + 1);
+            };
+
+            return (
+                <div className="container">
+                    <div style={{textAlign: 'center', marginBottom: '30px'}}>
+                        <h1>Apache Kafka Core Mechanics</h1>
+                        <p>Watch how producers append to the log, and consumers track their own independent offsets.</p>
+                    </div>
+
+                    {/* Producer Panel */}
+                    <div className="panel" style={{ borderTop: '4px solid #3498db' }}>
+                        <h2>1. Producer (Checkout Service)</h2>
+                        <p>The producer writes events sequentially to the end of the log. It doesn't care who is reading.</p>
+                        <button className="btn" onClick={produceMessage}>+ Produce New Order Event</button>
+                    </div>
+
+                    {/* Kafka Topic / Broker Panel */}
+                    <div className="panel" style={{ borderTop: '4px solid #9b59b6', backgroundColor: '#fafafa' }}>
+                        <h2>2. Kafka Topic (Append-Only Log)</h2>
+                        {topic.length === 0 ? <p style={{color: '#7f8c8d'}}>Log is empty. Produce an event above.</p> : null}
+                        <div className="log-container">
+                            {topic.map((msg, index) => (
+                                <div key={index} className="message-block">
+                                    <div className="offset-badge">{index}</div>
+                                    <strong>Order #{msg.id}</strong><br/>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Consumer Panel */}
+                    <div className="consumers-grid">
+                        <div className="panel" style={{ borderTop: '4px solid #2ecc71' }}>
+                            <h2>3A. Inventory Consumer</h2>
+                            <p>Reads the log at its own pace. Currently looking for Offset: <strong>{inventoryOffset}</strong></p>
+                            <button 
+                                className="btn" 
+                                style={{background: '#2ecc71'}}
+                                onClick={consumeInventory} 
+                                disabled={inventoryOffset >= topic.length}
+                            >
+                                Process Next Message
+                            </button>
+                            <div className="consumer-status">
+                                {inventoryOffset > 0 
+                                    ? `Successfully processed Order #${topic[inventoryOffset - 1].id} (Offset ${inventoryOffset - 1})` 
+                                    : "Waiting to process first event..."}
+                            </div>
+                        </div>
+
+                        <div className="panel" style={{ borderTop: '4px solid #e67e22' }}>
+                            <h2>3B. Shipping Consumer</h2>
+                            <p>Independent from Inventory. Currently looking for Offset: <strong>{shippingOffset}</strong></p>
+                            <button 
+                                className="btn" 
+                                style={{background: '#e67e22'}}
+                                onClick={consumeShipping} 
+                                disabled={shippingOffset >= topic.length}
+                            >
+                                Process Next Message
+                            </button>
+                            <div className="consumer-status">
+                                {shippingOffset > 0 
+                                    ? `Generated Label for Order #${topic[shippingOffset - 1].id} (Offset ${shippingOffset - 1})` 
+                                    : "Waiting to process first event..."}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<KafkaSimulator />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kafka Simulator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function KafkaSimulator() {
+      // The Kafka Topic (Append-only log)
+      const [topic, setTopic] = useState([]);
+      // Consumer's current "Bookmark"
+      const [consumerOffset, setConsumerOffset] = useState(0);
+      // Simulating an active consumer processing state
+      const [isProcessing, setIsProcessing] = useState(false);
+
+      const inventoryItems = ["Mangoes", "Spinach", "Avocados", "Tomatoes"];
+
+      // 1. PRODUCER LOGIC
+      const produceEvent = () => {
+        const randomItem = inventoryItems[Math.floor(Math.random() * inventoryItems.length)];
+        const newEvent = {
+          offset: topic.length,
+          payload: `Order: 1x Box of ${randomItem}`,
+          timestamp: new Date().toLocaleTimeString()
+        };
+        // Append-only: add to the end of the array
+        setTopic([...topic, newEvent]);
+      };
+
+      // 2. CONSUMER LOGIC
+      const consumeEvent = () => {
+        if (consumerOffset < topic.length) {
+          setIsProcessing(true);
+          // Simulate network/processing delay
+          setTimeout(() => {
+            // Move the bookmark forward
+            setConsumerOffset(prev => prev + 1);
+            setIsProcessing(false);
+          }, 800);
+        }
+      };
+
+      return (
+        <div className="p-8 max-w-4xl mx-auto bg-slate-50 min-h-screen font-sans">
+          <h1 className="text-3xl font-bold text-slate-800 mb-8 text-center">Interactive Kafka Simulator</h1>
+          
+          <div className="grid grid-cols-3 gap-8">
+            
+            {/* PRODUCER UI */}
+            <div className="bg-white p-6 rounded-lg shadow-md border border-slate-200 flex flex-col items-center justify-center">
+              <h2 className="text-xl font-bold text-blue-600 mb-2">Producer</h2>
+              <p className="text-sm text-slate-500 mb-6 text-center">Generates checkout events</p>
+              <button 
+                onClick={produceEvent}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition-all active:scale-95 shadow-md"
+              >
+                Publish New Order
+              </button>
+            </div>
+
+            {/* KAFKA TOPIC UI */}
+            <div className="bg-white p-6 rounded-lg shadow-md border-4 border-slate-800 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full bg-slate-800 text-white text-center py-1 font-mono text-sm tracking-widest">
+                KAFKA TOPIC (LOG)
+              </div>
+              <div className="mt-8 flex flex-col gap-2 h-64 overflow-y-auto pr-2">
+                {topic.length === 0 ? (
+                  <p className="text-slate-400 text-center mt-10 italic">Topic is empty. Waiting for events...</p>
+                ) : (
+                  topic.map((msg, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`p-3 rounded border font-mono text-sm flex justify-between items-center transition-all ${
+                        idx < consumerOffset 
+                          ? 'bg-slate-100 text-slate-400 border-slate-200' // Read messages
+                          : idx === consumerOffset && isProcessing
+                            ? 'bg-yellow-100 border-yellow-400 text-yellow-800 animate-pulse' // Currently processing
+                            : 'bg-green-50 border-green-300 text-green-800 shadow-sm' // Unread messages
+                      }`}
+                    >
+                      <span className="font-bold">Offset: {msg.offset}</span>
+                      <span>{msg.payload}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* CONSUMER UI */}
+            <div className="bg-white p-6 rounded-lg shadow-md border border-slate-200 flex flex-col items-center justify-center relative">
+              <h2 className="text-xl font-bold text-purple-600 mb-2">Consumer</h2>
+              <p className="text-sm text-slate-500 mb-4 text-center">Reads the log sequentially</p>
+              
+              <div className="mb-6 bg-slate-100 w-full py-2 text-center rounded font-mono text-sm text-slate-600">
+                Current Bookmark: <span className="font-bold text-slate-800 border-b-2 border-purple-500">{consumerOffset}</span>
+              </div>
+
+              <button 
+                onClick={consumeEvent}
+                disabled={consumerOffset >= topic.length || isProcessing}
+                className={`font-bold py-3 px-6 rounded-full transition-all shadow-md ${
+                  consumerOffset >= topic.length 
+                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    : 'bg-purple-600 hover:bg-purple-700 text-white active:scale-95'
+                }`}
+              >
+                {isProcessing ? 'Processing...' : 'Pull Next Event'}
+              </button>
+              
+              {consumerOffset < topic.length && !isProcessing && (
+                <span className="absolute bottom-2 text-xs text-red-500 font-bold animate-bounce">
+                  Unread events available!
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<KafkaSimulator />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+project → Bookshelf → Aisle 1 → Aisle 2 → Ref Guide
+
+| | Role |
+|---|---|
+| **ADK** | Does things |
+| **RAG** | Reference Guide |
+
+---
+
+## 🤖 ADK — Agent Development Kit
+
+*Action and Reasoning*
+
+> "Do something for me"
+
+**Key Characteristics:**
+- Step-by-step reasoning
+- Tool use
+- Rules
+- Consistent, repeatable behavior
+
+*Works well when your AI needs to perform tasks in a predictable sequence.*
+
+---
+
+## 📚 RAG — Retrieval Augmented Generation
+
+> "Tell me something about my data"
+
+
+**Key Characteristics:**
+- Knowledge
+- Accuracy
+
+*Connects to documents and retrieves the relevant data.*
+
+---
+
+## 🔀 Hybrid Approach
+
+Most real-world AI systems do not strictly choose one or the other.
+
+```
+    ADK                                 RAG
+    
+Intelligent ————→ ( Hybrid ) ←———— Well-informed
+```
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+In Java, the current object is:
+
+
+
+
+Does that refers the execution of a specific method execution on the call stack?
+
+method  on the call stack
+
+Runtime + Call Stack
+When a Java program runs:
+
+Objects exist in heap memory
+Method calls are handled using a call stack
+Each method call creates a stack frame
+While a method is executing, Java knows:
+
+which method is running
+which object invoked it
+
+
+
+That invoking object is the current object.
+
+
+
+What happens internally (step‑by‑step)
+① p1.setName("Stark")
+
+JVM creates a stack frame for setName
+JVM internally sets:
+this → reference to p1
+name → "Rahul"
+
+
+ It is about which method call is active on the stack
+
+----
+
+If multiple threads exist:
+
+Each thread has its own call stack
+Each thread can have its own current object
+this is always thread‑local and stack‑based
+
+So even in parallel execution:
+
+this is still unambiguous
+JVM always knows which object it refers to
+
+
+
+<br>
+<br>
+
+---
+
+In Java, Streams (introduced in Java 8) are a powerful API for processing sequences of elements (like collections, arrays, or I/O channels) in a functional, declarative style.
+
+They allow you to perform operations such as filtering, mapping, sorting, and reducing without explicitly writing loops.
+
+Key Points About Streams
+Not a Data Structure – A Stream does not store data; it processes data from a source.
+Functional Approach – Uses lambda expressions and method references.
+Lazy Evaluation – Intermediate operations are executed only when a terminal operation is invoked.
+Can Be Sequential or Parallel – Parallel streams can leverage multi-core processors.
+Single-use – Once consumed, a stream cannot be reused.
+Stream Pipeline Structure
+A stream pipeline consists of:
+
+Source – Collection, array, I/O channel, etc.
+Intermediate Operations – Transform the stream (e.g., filter, map, sorted).
+Terminal Operation – Produces a result or side-effect (e.g., collect, forEach, reduce).

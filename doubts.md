@@ -1,30 +1,134 @@
-# What is Database Management?
+MySQL is compliant with the ANSI SQL standard
 
-**Database Management** refers to the procedures and software used to store, organize, retrieve, and secure data in a computer system. At its core, it ensures that data is consistently available to users and applications while remaining secure. 
 
-It is typically handled by a **Database Management System (DBMS)**, which acts as a bridge between the end-users, the applications, and the data itself.
 
-### Key Functions of a DBMS:
-1. **Data Organization:** Defining schemas and structures to optimally store data (like tables, documents, arrays).
-2. **Data Manipulation:** Allowing users to easily insert, update, delete, and query data.
-3. **Data Security & Authorization:** Controlling who has access to view or change specific pieces of data.
-4. **Data Integrity:** Ensuring rules and constraints are followed, so data doesn't become corrupt or inaccurate.
-5. **Concurrency Control:** Managing multiple users accessing or modifying the exact same data simultaneously without crashing or creating conflicts.
-6. **Backup and Recovery:** Automating backups to restore data safely in case of a system failure.
+To build a web site that shows data from a database, you will need:
+
+An RDBMS database program (like MySQL)
+A server-side scripting language —> PHP
+use SQL to get the data you want
+use HTML / CSS to style the page
+
+
+
+SQL vs NoSQL 
+Does the syntax for DML, DDL,...-varies?
+
+
+
+
+Is that possible to create a table from a selected column name of the table?
+
+# Preparation
+
+[] Intro
+[] Project description (I should've detailly described about the project and UI/UX)
+[] My Module (why api/v3/carts)
+[] Active Listening
+
+
+
+.mvn/wrapper vs pom.xml — why Maven has these files?
+
+
+How does spring Security encapsulates/ hides the data, instead of directly passing through the endpoints — request parameters?
 
 ---
 
-# Relational vs Non-Relational Databases
 
-| Feature | Relational (e.g., PostgreSQL) | Non-Relational (e.g., MongoDB) |
-| :--- | :--- | :--- |
-| **Schema Design** | Rigid, predefined tables/columns | Flexible, schema-less documents |
-| **Data Structure** | Structured rows & columns | JSON-like BSON documents |
-| **Relationships** | Foreign keys & Normalization (Joins) | Embedded data & Denormalization |
-| **Availability** | ACID principles (Consistency focus) | BASE principles (Availability focus) |
-| **Scaling** | Vertical scaling (Scale-up) | Horizontal scaling (Scale-out) |
-| **Performance** | Optimized for complex queries | Optimized for high throughput & massive scale |
-| **Cost** | Higher server cost (Vertical) | Commodity hardware (Horizontal) |
+Controller vs RestController
+
+
+(http request, Response)
+---
+
+How does the (Spring) Security Filter Chain works?
+
+
+
+Springboot-starter-validation Vs Springboot-starter-jpa
+
+
+Does both the dependencies has validation annotations?
+
+---
+
+spring-boot-starter-actuator
+
+
+
+Class level Or Method/ Constructor level annotation
+
+---
+
+Spring life cycle
+
+Instantiation
+Dependency Injection ?
+Inversion of control
+Destruction
+
+
+---
+
+when application stopped, the bean is destroyed — what are the annotation used for the Bean destruction?
+
+(like Post Construct, Pre Destroy)
+
+---
+
+Primary Key - uniquely identifies each rows
+Foreigh Key
+
+Can a Table have (declared a) Primary Key without even relationship to the Other table? Then what's the whole point of Primary and Foreign Key?
+
+Does PK points out the FK in another table?
+Does Primary Key can also be a Foreigh Key?
+
+Aggregation functions - GROUP BY
+     |
+     v
+(same values ?)
+
+
+Index in table? vs  auto-increment field (How to set it)
+
+
+
+Does react have load balancer?
+
+
+
+
+
+
+
+
+Core java principles?
+
+
+
+jenkins 
+
+Docker - image, Container?
+
+
+Design principle........patery, patterns?
+
+
+
+
+BETWEEN
+LIKE	
+IN	
+
+
+select * from fresh_greens_db.orders join fresh_greens_db.users on fresh_greens_db.orders.buyer_id=fresh_greens_db.users.id;
+ 
+
+
+full join on Sql
+
 
 
 <br>
@@ -99,5 +203,30 @@ db.users.findOne({ name: "Alice" });
   ]
 }
 ```
+
+
+
+<br>
+
+--- 
+
+<br>
+
+
+
+tharun \n kumar
+
+
+
+https://www.w3schools.com/mysql/mysql_sql.asp
+
+
+
+
+https://www.geeksforgeeks.org/apache-kafka/what-is-apache-kafka-and-how-does-it-work/
+
+
+
+
 
 
