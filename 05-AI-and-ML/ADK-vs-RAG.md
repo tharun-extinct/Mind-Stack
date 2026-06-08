@@ -49,6 +49,33 @@ Intelligent ————→ ( Hybrid ) ←———— Well-informed
 
 
 
+Flops
+FlipFlops - ExaFlops of Native FP4 Compute
+
+shared HBM
+
+2X ICI Scale-up Bandwidth
+
+
+4X raw scale-out DCN bandwidth 
+
+
+JAX development framework
+
+
+Distributed Training beyond single superpod? 
+
+
+RDMA access?
+
+MXUs, MXU Quantization, VPU, SRAM
+
+
+
+
+
+
+
 
 
 
