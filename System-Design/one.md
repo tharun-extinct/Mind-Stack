@@ -141,35 +141,6 @@ flowchart LR
 - Stack trace
 - Reproduce those errors in order to fix them
 
-```mermaid
-
-
-flowchart LR
-    %% Invisible nodes to represent the incoming and outgoing floating arrows
-    Incoming(( ))
-    Outgoing(( ))
-    
-    style Incoming fill:none, stroke:none
-    style Outgoing fill:none, stroke:none
-
-    %% Main Nodes
-    Incoming --> Order[Order]
-    
-    %% Array-like structure for the Message Queue using the requested text format
-    Queue["Message Queue<br>[ _ | _ | _ | _ ]"]
-    
-    %% Forward flow routed through the Message Queue
-    Order --> Queue
-    Queue --> SMS["SMS ✔"]
-    
-    %% Backward arrow
-    SMS --> Order
-    
-    %% Representing the yellow auxiliary curved arrows
-    Order -.-> Queue
-    Order -.-> Outgoing
-    
-```
 
 
 
